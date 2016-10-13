@@ -5,11 +5,11 @@ import paho.mqtt.client as mqtt
 # This is the Subscriber
 
 def on_connect(client, userdata, flags, rc):
-  print("Yhteys auki" + str(rc))
-  client.subscribe("topic/senses")
+  print("Yhteys auki " + str(rc))
+  client.subscribe("robot/senses/#")
 
 def on_message(client, userdata, msg):
-  print(userdata)
+  print(msg.topic)
   print(msg.payload)
     
 client = mqtt.Client()
