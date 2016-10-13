@@ -3,10 +3,17 @@
 import sys
 import time
 import paho.mqtt.client as mqtt
+import argparse
 from sense_hat import SenseHat
 
-broker_url = sys.argv[1] if (len(sys.argv) > 1) else 'localhost'
-broker_port = int(sys.argv[2]) if (len(sys.argv) > 2) else 1883
+parser = argparse.ArgumentParser(description="Publish all the sensor data!")
+parser.add_argument("--host", default="localhost", help="broker address (default is localhost)")
+parser.add_argument("--port", default="1883", help="broker port (default is 1883)")
+parser.add_argument("--interval", default="1", help="sensor data publishing interval in seconds (default 1)")
+
+args = parser.parse_args()
+broker_url = args.host
+broker_port = int(args.port)
 
 sense = SenseHat()
 client = mqtt.Client()
@@ -38,6 +45,6 @@ while True:
   client.publish("robot/senses/accelerometer/pitch", accelerometer["pitch"])
   client.publish("robot/senses/accelerometer/roll", accelerometer["roll"])
   client.publish("robot/senses/accelerometer/yaw", accelerometer["yaw"])
-  time.sleep(1)
+  time.sleep(float(args.interval))
 
 client.disconnect()
